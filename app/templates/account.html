@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ t('account.title') }}</h1>
+        <p class="page-subtitle">{{ t('account.subtitle') }}</p>
+    </div>
+</div>
+
+{# ---------- Row 1: Profile + Usage ---------- #}
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card p-4 account-card">
+            <h2 class="section-title">{{ t('account.profile') }}</h2>
+            <div class="field">
+                <span class="label">{{ t('account.email') }}</span>
+                <span class="value">{{ current_user.email }}</span>
+            </div>
+            <div class="field">
+                <span class="label">{{ t('account.member_since') }}</span>
+                <span class="value">{{ current_user.created_at.strftime("%Y-%m-%d") }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-4 account-card">
+            <h2 class="section-title">{{ t('account.usage') }}</h2>
+
+            <div class="account-usage-value">
+                <span class="stat-value">{{ usage_used }}</span>
+                <span class="account-usage-sep">/</span>
+                <span class="account-usage-limit">{{ usage_limit }}</span>
+                <span class="account-usage-label">{{ t('account.usage_invoices') }}</span>
+            </div>
+
+            <div class="usage-bar mt-3">
+                <div class="usage-bar-fill" style="width: {{ usage_pct }}%;"></div>
+            </div>
+
+            <p class="account-usage-note">
+                {% if usage_remaining > 0 %}
+                    {{ usage_remaining }} {{ t('account.usage_remaining') }}
+                {% else %}
+                    {{ t('account.usage_reached') }}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+
+{# ---------- Row 2: Balance + Subscription ---------- #}
+<div class="row g-3 mt-3">
+    <div class="col-md-6">
+        <div class="card p-4 account-card">
+            <h2 class="section-title">{{ t('account.balance') }}</h2>
+
+            <div class="account-balance-value">
+                ${{ "%.2f"|format(current_user.balance or 0) }}
+            </div>
+
+            <p class="account-balance-hint">
+                {{ t('account.balance_hint') }}
+            </p>
+
+            <a class="btn btn-primary btn-block mt-3" href="/billing/topup">
+                {{ t('account.add_funds') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-4 account-card">
+            <h2 class="section-title">{{ t('account.subscription') }}</h2>
+
+            {% if current_user.plan == "pro" %}
+                <div class="account-plan-row">
+                    <div>
+                        <div class="account-plan-name">{{ t('account.plan_pro') }}</div>
+                        <div class="account-plan-price">{{ t('account.plan_price_pro') }}</div>
+                    </div>
+                    <div>
+                        {% if current_user.subscription_status == "active" %}
+                            <span class="status-badge status-approved">{{ t('account.status_active') }}</span>
+                        {% elif current_user.subscription_status == "cancelled" %}
+                            <span class="status-badge status-uploaded">{{ t('account.status_cancelled') }}</span>
+                        {% elif current_user.subscription_status == "past_due" %}
+                            <span class="status-badge status-rejected">{{ t('account.status_past_due') }}</span>
+                        {% else %}
+                            <span class="status-badge status-uploaded">{{ current_user.subscription_status }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if current_user.subscription_expires_at %}
+                    <p class="account-plan-note">
+                        {% if current_user.subscription_status == "cancelled" %}
+                            {{ t('account.cancelled_until') }}
+                            <strong>{{ current_user.subscription_expires_at.strftime("%Y-%m-%d") }}</strong>.
+                        {% elif current_user.subscription_status == "past_due" %}
+                            {{ t('account.past_due_warning') }}
+                            <strong>{{ current_user.subscription_expires_at.strftime("%Y-%m-%d") }}</strong>.
+                            <a href="/billing/topup">{{ t('account.past_due_add_funds') }}</a>
+                            {{ t('account.past_due_keep') }}
+                        {% else %}
+                            {{ t('account.renews_on') }}:
+                            <strong>{{ current_user.subscription_expires_at.strftime("%Y-%m-%d") }}</strong>
+                        {% endif %}
+                    </p>
+                {% endif %}
+
+                {% if current_user.subscription_status == "active" %}
+                    <form method="post" action="/billing/cancel-subscription" class="mt-3"
+                          onsubmit="return confirm('{{ t('account.cancel_confirm') }}');">
+                        <button class="btn btn-outline-danger btn-sm" type="submit">
+                            {{ t('account.cancel_subscription') }}
+                        </button>
+                    </form>
+                {% endif %}
+
+            {% else %}
+                <div class="account-plan-row">
+                    <div>
+                        <div class="account-plan-name">{{ t('account.plan_free') }}</div>
+                        <div class="account-plan-price">{{ t('account.plan_price_free') }}</div>
+                    </div>
+                    <div>
+                        <span class="status-badge status-uploaded">{{ t('account.status_active') }}</span>
+                    </div>
+                </div>
+
+                <p class="account-plan-note">{{ t('account.upgrade_hint') }}</p>
+
+                <a class="btn btn-primary btn-sm mt-2" href="/pricing">
+                    {{ t('account.upgrade_to_pro') }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{# ---------- Row 3: Recent transactions ---------- #}
+{% if transactions %}
+<div class="card p-4 mt-3 account-card">
+    <h2 class="section-title">{{ t('account.tx_title') }}</h2>
+
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>{{ t('account.tx_date') }}</th>
+                    <th>{{ t('account.tx_description') }}</th>
+                    <th class="text-end">{{ t('account.tx_amount') }}</th>
+                    <th class="text-end">{{ t('account.tx_balance') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                    <tr>
+                        <td class="text-muted mono">{{ tx.created_at.strftime("%Y-%m-%d") }}</td>
+                        <td>{{ tx.description or tx.kind }}</td>
+                        <td class="text-end mono"
+                            style="color: {{ 'var(--success)' if tx.amount > 0 else 'var(--text)' }};">
+                            {{ '+' if tx.amount > 0 else '' }}${{ "%.2f"|format(tx.amount) }}
+                        </td>
+                        <td class="text-end mono text-muted">${{ "%.2f"|format(tx.balance_after) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<div class="mt-4">
+    <a class="btn btn-outline-secondary" href="/pricing">{{ t('account.view_plans') }}</a>
+</div>
+{% endblock %}

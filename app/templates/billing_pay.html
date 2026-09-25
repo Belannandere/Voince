@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card" style="max-width: 520px;">
+        <h1 class="auth-title">Complete payment</h1>
+        <p class="auth-subtitle">
+            Payment of <strong>${{ "%.2f"|format(amount) }}</strong> (USD)
+        </p>
+
+        {% if payment_url %}
+            <a class="btn btn-primary btn-block" href="{{ payment_url }}"
+               target="_blank" rel="noopener">
+                Open Trybit checkout
+            </a>
+            <p class="auth-hint" style="margin-top:12px;">
+                You will be redirected to Trybit to complete the payment.
+                After paying, return here — this page will update automatically.
+            </p>
+        {% else %}
+            <div class="alert alert-danger">
+                Could not obtain a checkout link. Please try again later.
+            </div>
+        {% endif %}
+
+        <p class="auth-footer" style="margin-top:24px;">
+            <a href="/account">Back to Account</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

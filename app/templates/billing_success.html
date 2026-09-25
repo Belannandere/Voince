@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <h1 class="auth-title">Payment processing</h1>
+        <p class="auth-subtitle">
+            We received your payment and are crediting your balance.
+        </p>
+
+        {% if topup_status == "paid" %}
+            <div class="alert alert-success">
+                Balance updated. Your current balance is
+                <strong>${{ "%.2f"|format(current_user.balance or 0) }}</strong>.
+            </div>
+            <a class="btn btn-primary btn-block" href="/account">Go to Account</a>
+        {% else %}
+            <div class="alert alert-info">
+                Payment is being processed. This usually takes a few seconds.
+                Reload this page in a moment to check.
+            </div>
+            <a class="btn btn-outline-secondary btn-block" href="/account">
+                Check status in Account
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

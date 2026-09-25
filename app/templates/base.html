@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+    (function () {
+        function apply(theme) {
+            var root = document.documentElement;
+            root.setAttribute('data-theme', theme);
+            root.setAttribute('data-bs-theme', theme);
+        }
+        try {
+            var saved = localStorage.getItem('voince-theme');
+            if (saved === 'dark' || saved === 'light') {
+                apply(saved);
+            } else if (window.matchMedia &&
+                       window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                apply('dark');
+            } else {
+                apply('light');
+            }
+        } catch (e) {}
+    })();
+    </script>
+</head>
+<body>
+    <nav class="app-navbar">
+        <div class="container app-navbar-inner">
+            {# --- LEFT: brand --- #}
+            <a class="app-brand" href="/">
+                <svg class="app-brand-mark" width="32" height="32" viewBox="0 0 32 32"
+                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="voinceGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                            <stop offset="0" stop-color="#6366f1"/>
+                            <stop offset="1" stop-color="#4338ca"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M9 1 H23 L31 9 V23 A9 9 0 0 1 22 32 H9 A9 9 0 0 1 0 23 V10 A9 9 0 0 1 9 1 Z"
+                          fill="url(#voinceGrad)"/>
+                    <path d="M23 1 L31 9 L23 9 Z" fill="#ffffff" fill-opacity="0.22"/>
+                    <path d="M10 11 L16 21 L22 11"
+                          stroke="#ffffff" stroke-width="2.6"
+                          stroke-linecap="round" stroke-linejoin="round"
+                          fill="none"/>
+                </svg>
+                <span class="app-brand-name">Voince</span>
+            </a>
+
+            {# --- CENTER: primary navigation --- #}
+            <div class="app-nav-center">
+                {% if current_user %}
+                    <a class="app-nav-link {% if request.url.path.startswith('/invoices') %}is-active{% endif %}"
+                       href="/invoices">{{ t('nav.invoices') }}</a>
+                    <a class="app-nav-link {% if request.url.path.startswith('/upload') %}is-active{% endif %}"
+                       href="/upload">{{ t('nav.upload') }}</a>
+                    <a class="app-nav-link {% if request.url.path == '/pricing' %}is-active{% endif %}"
+                       href="/pricing">{{ t('nav.pricing') }}</a>
+                {% else %}
+                    <a class="app-nav-link" href="/#features">{{ t('nav.features') }}</a>
+                    <a class="app-nav-link" href="/#how-it-works">{{ t('nav.how_it_works') }}</a>
+                    <a class="app-nav-link {% if request.url.path == '/pricing' %}is-active{% endif %}"
+                       href="/pricing">{{ t('nav.pricing') }}</a>
+                {% endif %}
+            </div>
+
+            {# --- RIGHT: actions --- #}
+            <div class="app-nav-right">
+                {# Language switcher #}
+                <div class="lang-switcher" id="lang-switcher">
+                    <button type="button" class="lang-trigger" id="lang-trigger"
+                            aria-haspopup="true" aria-expanded="false">
+                        <svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M2 12h20"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        <span class="lang-code">{{ lang|upper }}</span>
+                        <svg class="lang-caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                            <path d="M1 3 L5 7 L9 3" stroke="currentColor" stroke-width="1.6"
+                                  fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="lang-dropdown" id="lang-dropdown" hidden>
+                        {% for code, info in available_langs.items() %}
+                            <a class="lang-item {% if code == lang %}is-active{% endif %}"
+                               href="/set-language/{{ code }}?next={{ request.url.path }}">
+                                <span class="lang-code-sm">{{ code|upper }}</span>
+                                <span>{{ info.name }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if current_user %}
+                    {% set used = current_user.invoices_used or 0 %}
+                    {% set limit = current_user.invoices_limit or 0 %}
+                    <span class="usage-pill" title="Monthly invoices used">
+                        {{ used }} / {{ limit }}
+                    </span>
+
+                    <div class="account-menu" id="account-menu">
+                        <button type="button"
+                                class="account-menu-trigger"
+                                id="account-menu-trigger"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="account-menu-dropdown">
+                            <span class="account-menu-avatar" aria-hidden="true">
+                                {{ current_user.email[0]|upper }}
+                            </span>
+                            <span class="account-menu-caret" aria-hidden="true">
+                                <svg width="10" height="10" viewBox="0 0 10 10">
+                                    <path d="M1 3 L5 7 L9 3" stroke="currentColor" stroke-width="1.6"
+                                          fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <div class="account-menu-dropdown" id="account-menu-dropdown" role="menu" hidden>
+                            <div class="account-menu-header">
+                                <div class="account-menu-header-email">{{ current_user.email }}</div>
+                                <div class="account-menu-header-plan">
+                                    {{ current_user.plan|capitalize }}
+                                </div>
+                            </div>
+                            <a class="account-menu-item" role="menuitem" href="/account">{{ t('nav.account') }}</a>
+                            <a class="account-menu-item" role="menuitem" href="/settings">{{ t('nav.settings') }}</a>
+                            <button type="button"
+                                    class="account-menu-item theme-toggle theme-toggle-btn"
+                                    role="menuitem">
+                                <span>{{ t('nav.theme') }}</span>
+                                <span class="theme-toggle-value">{{ t('nav.light') }}</span>
+                            </button>
+                            <div class="account-menu-sep"></div>
+                            <a class="account-menu-item account-menu-item-danger" role="menuitem" href="/logout">{{ t('nav.logout') }}</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="app-nav-link" href="/login">{{ t('nav.login') }}</a>
+                    <a class="btn btn-primary btn-sm" href="/register">{{ t('nav.get_started') }}</a>
+                {% endif %}
+            </div>
+
+            {# --- Mobile toggle (only visible < 768px) --- #}
+            <button type="button"
+                    class="app-nav-toggle"
+                    id="app-nav-toggle"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                    aria-controls="app-nav-mobile">
+                <svg class="nav-toggle-open" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                    <path d="M3 6h14M3 10h14M3 14h14"/>
+                </svg>
+                <svg class="nav-toggle-close" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                    <path d="M5 5l10 10M15 5L5 15"/>
+                </svg>
+            </button>
+        </div>
+
+        {# --- Mobile dropdown (hidden by default) --- #}
+        <div class="app-nav-mobile" id="app-nav-mobile" hidden>
+            <div class="container app-nav-mobile-inner">
+                {% if current_user %}
+                    <a class="app-nav-mobile-link" href="/invoices">{{ t('nav.invoices') }}</a>
+                    <a class="app-nav-mobile-link" href="/upload">{{ t('nav.upload') }}</a>
+                    <a class="app-nav-mobile-link" href="/pricing">{{ t('nav.pricing') }}</a>
+                    <div class="app-nav-mobile-sep"></div>
+                    <a class="app-nav-mobile-link" href="/account">{{ t('nav.account') }}</a>
+                    <a class="app-nav-mobile-link" href="/settings">{{ t('nav.settings') }}</a>
+                    <button type="button" class="app-nav-mobile-link theme-toggle-btn">
+                        <span>{{ t('nav.theme') }}</span>
+                        <span class="theme-toggle-value">{{ t('nav.light') }}</span>
+                    </button>
+                    <a class="app-nav-mobile-link app-nav-mobile-link-danger" href="/logout">{{ t('nav.logout') }}</a>
+                {% else %}
+                    <a class="app-nav-mobile-link" href="/#features">{{ t('nav.features') }}</a>
+                    <a class="app-nav-mobile-link" href="/#how-it-works">{{ t('nav.how_it_works') }}</a>
+                    <a class="app-nav-mobile-link" href="/pricing">{{ t('nav.pricing') }}</a>
+                    <div class="app-nav-mobile-sep"></div>
+                    <a class="app-nav-mobile-link" href="/login">{{ t('nav.login') }}</a>
+                    <a class="btn btn-primary btn-block" href="/register">{{ t('nav.get_started') }}</a>
+                {% endif %}
+
+                {# Language switcher (mobile) #}
+                <div class="app-nav-mobile-sep"></div>
+                <div class="lang-mobile">
+                    {% for code, info in available_langs.items() %}
+                        <a class="app-nav-mobile-link {% if code == lang %}is-active{% endif %}"
+                           href="/set-language/{{ code }}?next={{ request.url.path }}">
+                            <span>{{ info.name }}</span>
+                            {% if code == lang %}<span>✓</span>{% endif %}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container app-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% if not current_user %}
+    {# ---------- Full marketing footer (guests only) ---------- #}
+    <footer class="app-footer">
+        <div class="container">
+            <div class="app-footer-grid">
+                <div class="app-footer-brand">
+                    <a class="app-brand" href="/">
+                        <svg class="app-brand-mark" width="28" height="28" viewBox="0 0 32 32"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="voinceGradFooter" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#6366f1"/>
+                                    <stop offset="1" stop-color="#4338ca"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M9 1 H23 L31 9 V23 A9 9 0 0 1 22 32 H9 A9 9 0 0 1 0 23 V10 A9 9 0 0 1 9 1 Z"
+                                  fill="url(#voinceGradFooter)"/>
+                            <path d="M23 1 L31 9 L23 9 Z" fill="#ffffff" fill-opacity="0.22"/>
+                            <path d="M10 11 L16 21 L22 11"
+                                  stroke="#ffffff" stroke-width="2.6"
+                                  stroke-linecap="round" stroke-linejoin="round"
+                                  fill="none"/>
+                        </svg>
+                        <span class="app-brand-name">Voince</span>
+                    </a>
+                    <p class="app-footer-tagline">{{ t('footer.tagline') }}</p>
+                </div>
+
+                <div class="app-footer-col">
+                    <h4 class="app-footer-title">{{ t('footer.product') }}</h4>
+                    <ul class="app-footer-links">
+                        <li><a href="/#features">{{ t('footer.features') }}</a></li>
+                        <li><a href="/#how-it-works">{{ t('footer.how') }}</a></li>
+                        <li><a href="/pricing">{{ t('footer.pricing') }}</a></li>
+                    </ul>
+                </div>
+
+                <div class="app-footer-col">
+                    <h4 class="app-footer-title">{{ t('footer.resources') }}</h4>
+                    <ul class="app-footer-links">
+                        <li><a href="/docs">{{ t('footer.docs') }}</a></li>
+                        <li><a href="https://github.com/Belannandere/Virelo" target="_blank" rel="noopener">{{ t('footer.github') }}</a></li>
+                    </ul>
+                </div>
+
+                <div class="app-footer-col">
+                    <h4 class="app-footer-title">{{ t('footer.legal') }}</h4>
+                    <ul class="app-footer-links">
+                        <li><a href="/privacy">{{ t('footer.privacy') }}</a></li>
+                        <li><a href="/terms">{{ t('footer.terms') }}</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="app-footer-bottom">
+                © 2026 Voince. {{ t('footer.rights') }}
+            </div>
+        </div>
+    </footer>
+
+    {% else %}
+    {# ---------- Compact footer (logged-in users) ---------- #}
+    <footer class="app-footer app-footer-compact">
+        <div class="container app-footer-compact-inner">
+            <span class="app-footer-compact-copy">
+                © 2026 Voince
+            </span>
+            <nav class="app-footer-compact-nav" aria-label="Footer">
+                <a href="/docs">Docs</a>
+                    <span class="app-footer-compact-sep" aria-hidden="true">·</span>
+                <a href="/privacy">{{ t('footer.privacy') }}</a>
+                    <span class="app-footer-compact-sep" aria-hidden="true">·</span>
+                <a href="/terms">{{ t('footer.terms') }}</a>
+                    <span class="app-footer-compact-sep" aria-hidden="true">·</span>
+                <a href="https://github.com/Belannandere/Virelo" target="_blank" rel="noopener">GitHub</a>
+            </nav>
+        </div>
+    </footer>
+    {% endif %}
+
+    <script>
+    (function () {
+        // ---- Account dropdown ----
+        var menu = document.getElementById('account-menu');
+        if (menu) {
+            var trigger = document.getElementById('account-menu-trigger');
+            var dropdown = document.getElementById('account-menu-dropdown');
+
+            var open = function () {
+                dropdown.hidden = false;
+                trigger.setAttribute('aria-expanded', 'true');
+                menu.classList.add('is-open');
+            };
+            var close = function () {
+                dropdown.hidden = true;
+                trigger.setAttribute('aria-expanded', 'false');
+                menu.classList.remove('is-open');
+            };
+
+            trigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (dropdown.hidden) open(); else close();
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!menu.contains(e.target)) close();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') close();
+            });
+        }
+
+        // ---- Language dropdown ----
+        var langSwitcher = document.getElementById('lang-switcher');
+        if (langSwitcher) {
+            var langTrigger = document.getElementById('lang-trigger');
+            var langDropdown = document.getElementById('lang-dropdown');
+
+            langTrigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var isHidden = langDropdown.hidden;
+                langDropdown.hidden = !isHidden;
+                langSwitcher.classList.toggle('is-open', isHidden);
+                langTrigger.setAttribute('aria-expanded', String(isHidden));
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!langSwitcher.contains(e.target)) {
+                    langDropdown.hidden = true;
+                    langSwitcher.classList.remove('is-open');
+                    langTrigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    langDropdown.hidden = true;
+                    langSwitcher.classList.remove('is-open');
+                    langTrigger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // ---- Mobile menu ----
+        var navToggle = document.getElementById('app-nav-toggle');
+        var navMobile = document.getElementById('app-nav-mobile');
+        if (navToggle && navMobile) {
+            navToggle.addEventListener('click', function () {
+                var isOpen = !navMobile.hidden;
+                navMobile.hidden = isOpen;
+                navToggle.setAttribute('aria-expanded', String(!isOpen));
+                navToggle.classList.toggle('is-open', !isOpen);
+            });
+
+            navMobile.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    navMobile.hidden = true;
+                    navToggle.setAttribute('aria-expanded', 'false');
+                    navToggle.classList.remove('is-open');
+                });
+            });
+        }
+
+        // ---- Theme toggles ----
+        var root = document.documentElement;
+
+        var currentTheme = function () {
+            return root.getAttribute('data-theme') || 'light';
+        };
+        var applyTheme = function (theme) {
+            root.setAttribute('data-theme', theme);
+            root.setAttribute('data-bs-theme', theme);
+        };
+        var labels = {
+            light: "{{ t('nav.light') }}",
+            dark: "{{ t('nav.dark') }}"
+        };
+        var refreshThemeLabels = function () {
+            document.querySelectorAll('.theme-toggle-value').forEach(function (el) {
+                el.textContent = currentTheme() === 'dark' ? labels.dark : labels.light;
+            });
+        };
+        refreshThemeLabels();
+
+        document.querySelectorAll('.theme-toggle-btn').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var next = currentTheme() === 'dark' ? 'light' : 'dark';
+                applyTheme(next);
+                try { localStorage.setItem('voince-theme', next); } catch (_) {}
+                refreshThemeLabels();
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

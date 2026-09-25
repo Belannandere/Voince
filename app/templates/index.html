@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        {{ t('hero.badge') }}
+    </div>
+    <h1 class="hero-title">{{ t('hero.title') }}</h1>
+    <p class="hero-subtitle">{{ t('hero.subtitle') }}</p>
+    <div class="hero-actions">
+        {% if current_user %}
+            <a class="btn btn-primary btn-lg" href="/upload">{{ t('hero.upload') }}</a>
+        {% else %}
+            <a class="btn btn-primary btn-lg" href="/register">{{ t('hero.try') }}</a>
+        {% endif %}
+        <a class="btn btn-outline-secondary btn-lg" href="#how-it-works">{{ t('hero.see_how') }}</a>
+    </div>
+    <ul class="hero-features">
+        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:5px;vertical-align:-2px;"><path d="M20 6 9 17l-5-5"/></svg></span> {{ t('hero.feat_extract') }}</li>
+        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:5px;vertical-align:-2px;"><path d="M20 6 9 17l-5-5"/></svg></span> {{ t('hero.feat_validate') }}</li>
+        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:5px;vertical-align:-2px;"><path d="M20 6 9 17l-5-5"/></svg></span> {{ t('hero.feat_export') }}</li>
+        <li><span class="check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:5px;vertical-align:-2px;"><path d="M20 6 9 17l-5-5"/></svg></span> {{ t('hero.feat_secure') }}</li>
+    </ul>
+</section>
+
+<section class="upload-card">
+    <a href="{% if current_user %}/upload{% else %}/register{% endif %}" class="dropzone-link">
+        <div class="dropzone">
+            <div class="dropzone-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+            </div>
+            <div class="dropzone-title">{{ t('drop.title') }}</div>
+            <div class="dropzone-subtitle">{{ t('drop.subtitle') }}</div>
+            <div class="dropzone-hint">{{ t('drop.hint') }}</div>
+        </div>
+    </a>
+</section>
+
+<section class="section" id="how-it-works">
+    <div class="section-header">
+        <h2>{{ t('how.title') }}</h2>
+        <p>{{ t('how.subtitle') }}</p>
+    </div>
+    <div class="steps">
+        <div class="step">
+            <div class="step-icon" data-step="1" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+            </div>
+            <h3 class="step-title">{{ t('how.step1_title') }}</h3>
+            <p class="step-desc">{{ t('how.step1_desc') }}</p>
+        </div>
+        <div class="step-arrow" aria-hidden="true">→</div>
+        <div class="step">
+            <div class="step-icon" data-step="2" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                    <path d="M20 3v4"/>
+                    <path d="M22 5h-4"/>
+                    <path d="M4 17v2"/>
+                    <path d="M5 18H3"/>
+                </svg>
+            </div>
+            <h3 class="step-title">{{ t('how.step2_title') }}</h3>
+            <p class="step-desc">{{ t('how.step2_desc') }}</p>
+        </div>
+        <div class="step-arrow" aria-hidden="true">→</div>
+        <div class="step">
+            <div class="step-icon" data-step="3" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.801 10A10 10 0 1 1 17 3.335"/>
+                    <path d="m9 11 3 3L22 4"/>
+                </svg>
+            </div>
+            <h3 class="step-title">{{ t('how.step3_title') }}</h3>
+            <p class="step-desc">{{ t('how.step3_desc') }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-header">
+        <h2>{{ t('demo.title') }}</h2>
+        <p>{{ t('demo.subtitle') }}</p>
+    </div>
+    <div class="demo-card">
+        <div class="demo-pdf">
+            <div class="demo-pdf-frame">
+                <div class="demo-pdf-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                    </svg>
+                    <span>invoice_2026.pdf</span>
+                </div>
+                <div class="demo-pdf-lines">
+                    <div class="demo-pdf-line title"></div>
+                    <div class="demo-pdf-line short"></div>
+                    <div class="demo-pdf-line wide"></div>
+                    <div class="demo-pdf-line medium"></div>
+                    <div class="demo-pdf-line wide"></div>
+                    <div class="demo-pdf-line wide"></div>
+                    <div class="demo-pdf-line medium"></div>
+                    <div class="demo-pdf-line total"></div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-data">
+            <div class="demo-data-header">
+                <div class="section-title" style="margin-bottom: 0;">{{ t('demo.extracted') }}</div>
+                <span class="demo-validated-badge">
+                    <span class="check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:5px;vertical-align:-2px;"><path d="M20 6 9 17l-5-5"/></svg></span> {{ t('demo.validated') }}
+                </span>
+            </div>
+            <div class="demo-row"><span>{{ t('demo.vendor') }}</span><span>Acme Inc.</span></div>
+            <div class="demo-row"><span>{{ t('demo.invoice_number') }}</span><span>INV-1042</span></div>
+            <div class="demo-row"><span>{{ t('demo.date') }}</span><span>Mar 12, 2026</span></div>
+            <div class="demo-row"><span>{{ t('demo.due_date') }}</span><span>Apr 12, 2026</span></div>
+            <div class="demo-row"><span>{{ t('demo.subtotal') }}</span><span>$1,240.00</span></div>
+            <div class="demo-row"><span>{{ t('demo.tax') }}</span><span>$124.00</span></div>
+            <div class="demo-row demo-row-total"><span>{{ t('demo.total') }}</span><span>$1,364.00</span></div>
+            <div class="demo-actions">
+                <button type="button" class="btn btn-outline-secondary btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:6px;vertical-align:-2px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    {{ t('demo.download_csv') }}
+                </button>
+                <p class="demo-caption">{{ t('demo.caption') }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section benefits-section" id="features">
+    <div class="section-header">
+        <h2>{{ t('benefits.title') }}</h2>
+        <p>{{ t('benefits.subtitle') }}</p>
+    </div>
+
+    <div class="benefits-grid">
+        <div class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </div>
+            <h3>{{ t('benefits.private_title') }}</h3>
+            <p>{{ t('benefits.private_desc') }}</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                    <path d="M20 3v4"/>
+                    <path d="M22 5h-4"/>
+                    <path d="M4 17v2"/>
+                    <path d="M5 18H3"/>
+                </svg>
+            </div>
+            <h3>{{ t('benefits.ai_title') }}</h3>
+            <p>{{ t('benefits.ai_desc') }}</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.801 10A10 10 0 1 1 17 3.335"/>
+                    <path d="m9 11 3 3L22 4"/>
+                </svg>
+            </div>
+            <h3>{{ t('benefits.validated_title') }}</h3>
+            <p>{{ t('benefits.validated_desc') }}</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+            </div>
+            <h3>{{ t('benefits.export_title') }}</h3>
+            <p>{{ t('benefits.export_desc') }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="section faq-section" id="faq">
+    <div class="section-header">
+        <h2>{{ t('faq.title') }}</h2>
+        <p>{{ t('faq.subtitle') }}</p>
+    </div>
+
+    <div class="faq-list">
+        <details class="faq-item">
+            <summary>{{ t('faq.q1') }}</summary>
+            <p>{{ t('faq.a1') }}</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>{{ t('faq.q2') }}</summary>
+            <p>{{ t('faq.a2') }}</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>{{ t('faq.q3') }}</summary>
+            <p>{{ t('faq.a3') }}</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>{{ t('faq.q4') }}</summary>
+            <p>{{ t('faq.a4') }}</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>{{ t('faq.q5') }}</summary>
+            <p>{{ t('faq.a5') }}</p>
+        </details>
+
+        <details class="faq-item">
+            <summary>{{ t('faq.q6') }}</summary>
+            <p>{{ t('faq.a6') }}</p>
+        </details>
+    </div>
+</section>
+{% endblock %}

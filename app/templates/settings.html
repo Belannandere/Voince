@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ t('settings.title') }}</h1>
+        <p class="page-subtitle">{{ t('settings.subtitle') }}</p>
+    </div>
+    <div class="page-actions">
+        <a class="btn btn-outline-secondary" href="/account">{{ t('settings.view_usage') }}</a>
+    </div>
+</div>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if success %}
+    <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+{# ---------- Email ---------- #}
+<div class="card p-4 settings-card">
+    <h2 class="section-title">{{ t('settings.email_section') }}</h2>
+
+    <div class="field">
+        <span class="label">{{ t('settings.email_current') }}</span>
+        <span class="value">{{ current_user.email }}</span>
+    </div>
+
+    <form method="post" action="/settings/email" class="mt-4 settings-form">
+        <div class="settings-field">
+            <label class="auth-label" for="new_email">{{ t('settings.email_new') }}</label>
+            <input class="auth-input" type="email" id="new_email" name="new_email"
+                   required placeholder="you@example.com">
+        </div>
+
+        {% if has_password %}
+            <div class="settings-field">
+                <label class="auth-label" for="email_current_password">
+                    {{ t('settings.password_current') }}
+                </label>
+                <input class="auth-input" type="password"
+                       id="email_current_password"
+                       name="current_password" required
+                       autocomplete="current-password">
+            </div>
+        {% endif %}
+
+        <button class="btn btn-primary" type="submit">
+            {{ t('settings.email_change') }}
+        </button>
+    </form>
+</div>
+
+{# ---------- Password ---------- #}
+<div class="card p-4 settings-card mt-3">
+    <h2 class="section-title">{{ t('settings.password_section') }}</h2>
+
+    <p class="settings-note">
+        {% if has_password %}
+            {{ t('settings.password_have') }}
+        {% else %}
+            {{ t('settings.password_oauth') }}
+        {% endif %}
+    </p>
+
+    <form method="post" action="/settings/password" class="settings-form">
+        {% if has_password %}
+            <div class="settings-field">
+                <label class="auth-label" for="current_password">
+                    {{ t('settings.password_current') }}
+                </label>
+                <input class="auth-input" type="password"
+                       id="current_password" name="current_password"
+                       required autocomplete="current-password">
+            </div>
+        {% endif %}
+
+        <div class="settings-field">
+            <label class="auth-label" for="new_password">{{ t('settings.password_new') }}</label>
+            <input class="auth-input" type="password"
+                   id="new_password" name="new_password"
+                   minlength="8" required autocomplete="new-password">
+            <div class="auth-hint">{{ t('settings.password_hint') }}</div>
+        </div>
+
+        <div class="settings-field">
+            <label class="auth-label" for="new_password_confirm">
+                {{ t('settings.password_new_confirm') }}
+            </label>
+            <input class="auth-input" type="password"
+                   id="new_password_confirm" name="new_password_confirm"
+                   required autocomplete="new-password">
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            {% if has_password %}
+                {{ t('settings.password_change') }}
+            {% else %}
+                {{ t('settings.password_set') }}
+            {% endif %}
+        </button>
+    </form>
+</div>
+
+{# ---------- Danger zone ---------- #}
+<div class="card p-4 settings-card settings-danger mt-3">
+    <h2 class="section-title settings-danger-title">{{ t('settings.danger_zone') }}</h2>
+
+    <p class="settings-note">{{ t('settings.danger_desc') }}</p>
+
+    <details class="settings-danger-details">
+        <summary>{{ t('settings.danger_show') }}</summary>
+
+        <form method="post" action="/settings/delete" class="mt-4 settings-form">
+            <div class="settings-field">
+                <label class="auth-label" for="confirm_email">
+                    {{ t('settings.danger_confirm_email') }}
+                    <code>{{ current_user.email }}</code>
+                    {{ t('settings.danger_confirm_suffix') }}
+                </label>
+                <input class="auth-input" type="text" id="confirm_email"
+                       name="confirm_email" required>
+            </div>
+
+            {% if has_password %}
+                <div class="settings-field">
+                    <label class="auth-label" for="delete_current_password">
+                        {{ t('settings.password_current') }}
+                    </label>
+                    <input class="auth-input" type="password"
+                           id="delete_current_password"
+                           name="current_password" required
+                           autocomplete="current-password">
+                </div>
+            {% endif %}
+
+            <button class="btn btn-outline-danger" type="submit"
+                    onclick="return confirm('Delete your account permanently? This cannot be undone.');">
+                {{ t('settings.danger_delete') }}
+            </button>
+        </form>
+    </details>
+</div>
+{% endblock %}

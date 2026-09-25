@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <h1 class="auth-title">Payment cancelled</h1>
+        <p class="auth-subtitle">You cancelled the payment. No charges were made.</p>
+
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <a class="btn btn-primary btn-block" href="/pricing">Back to pricing</a>
+    </div>
+</div>
+{% endblock %}

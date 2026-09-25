@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="legal-page">
+    <div class="legal-header">
+        <h1>Privacy Policy</h1>
+        <p class="legal-meta">Last updated: September 25, 2026</p>
+    </div>
+
+    <div class="legal-body">
+        <p class="legal-lead">
+            This Privacy Policy explains how Voince ("we", "us", "our") collects,
+            uses, stores, and protects your personal data when you use our
+            invoice-processing service at <strong>voince.com</strong> (the "Service").
+        </p>
+
+        <h2>1. Who we are</h2>
+        <p>
+            Voince is a software-as-a-service product that extracts structured
+            data from PDF invoices using a locally-hosted language model. The
+            Service is operated by the Voince team. For privacy questions, contact
+            us at <a href="mailto:privacy@voince.com">privacy@voince.com</a>.
+        </p>
+
+        <h2>2. Data we collect</h2>
+
+        <h3>2.1 Account data</h3>
+        <ul>
+            <li>Email address</li>
+            <li>Password (stored as a bcrypt hash — the plaintext is never retained)</li>
+            <li>If you sign in with Google or GitHub: the provider's user ID
+                and the verified email address they return</li>
+            <li>Account creation date, plan status, monthly usage counters</li>
+        </ul>
+
+        <h3>2.2 Invoice data</h3>
+        <ul>
+            <li>The PDF files you upload</li>
+            <li>The text extracted from those PDFs</li>
+            <li>The structured data the AI extracts (supplier, invoice number,
+                dates, amounts, line items)</li>
+            <li>Validation results</li>
+        </ul>
+
+        <h3>2.3 Billing data</h3>
+        <ul>
+            <li>Cryptocurrency payments are processed by <strong>Trybit</strong>.
+                We do not receive or store your wallet keys or card details.
+                We receive the payment amount, currency, timestamp, and the
+                transaction identifier from Trybit's webhook.</li>
+            <li>Internal balance ledger entries (top-ups and subscription charges)</li>
+        </ul>
+
+        <h3>2.4 Technical data</h3>
+        <ul>
+            <li>Session cookies (essential, see Section 5)</li>
+            <li>Language preference cookie</li>
+            <li>Server logs may include IP address, timestamp, HTTP method,
+                and requested URL for security and debugging purposes</li>
+        </ul>
+
+        <h2>3. How we use your data</h2>
+        <ul>
+            <li>To provide the Service: process your invoices, store the results,
+                display them in your account</li>
+            <li>To authenticate you and manage your account</li>
+            <li>To enforce monthly usage limits and process subscription payments</li>
+            <li>To prevent abuse, fraud, and security incidents</li>
+            <li>To respond to your support requests</li>
+        </ul>
+
+        <h2>4. Local AI processing — no external AI providers</h2>
+        <p>
+            Voince runs the language model <strong>on the same server that hosts
+            the Service</strong> (via Ollama). Your invoice text is
+            <strong>never sent to OpenAI, Google, Anthropic, or any other
+            external AI provider</strong>. All extraction happens locally
+            on our own infrastructure.
+        </p>
+        <p>
+            The AI model is used <strong>only</strong> to extract structured data
+            from the text. All financial validation (arithmetic, totals, line
+            items) is performed by deterministic Python code, not by the AI.
+        </p>
+
+        <h2>5. Cookies</h2>
+        <p>Voince uses only essential cookies:</p>
+        <ul>
+            <li><code>voince_session</code> — your authenticated session, signed
+                with a secret key, HTTP-only, SameSite=Lax</li>
+            <li><code>voince_lang</code> — your selected language (UI preference
+                only)</li>
+        </ul>
+        <p>
+            We do not use advertising, tracking, or third-party analytics cookies.
+        </p>
+
+        <h2>6. Data storage and security</h2>
+        <ul>
+            <li>All data is stored on a dedicated virtual private server</li>
+            <li>The database is SQLite, stored on encrypted disk</li>
+            <li>Uploaded PDF files are stored on the same server and are
+                accessible only through authenticated endpoints</li>
+            <li>All traffic to and from the Service uses HTTPS (TLS 1.2+)</li>
+            <li>Passwords are hashed with bcrypt; we cannot recover your password</li>
+            <li>Access to the server is restricted to authorised operators</li>
+            <li>Daily database backups are performed</li>
+        </ul>
+
+        <h2>7. Data retention</h2>
+        <p>
+            Your account data and invoice data are retained for as long as your
+            account is active. When you delete your account (Settings → Delete
+            account), we permanently delete:
+        </p>
+        <ul>
+            <li>Your user record</li>
+            <li>All your documents and uploaded PDF files</li>
+            <li>All extracted invoice data, line items, and validation results</li>
+            <li>Your balance and transaction history</li>
+        </ul>
+        <p>
+            Note: aggregated or anonymised records that cannot be linked back to
+            you may be retained for statistics. Server logs are rotated and
+            deleted within 30 days.
+        </p>
+
+        <h2>8. Sharing your data</h2>
+        <p>We do not sell your data. We share it only with:</p>
+        <ul>
+            <li><strong>Trybit</strong> (payment processor) — to process
+                cryptocurrency payments and subscription renewals</li>
+            <li><strong>Google / GitHub</strong> — only if you choose to sign
+                in with them, and only the minimum information needed for
+                authentication</li>
+            <li><strong>Cloudflare</strong> (CDN / DNS) — for site delivery
+                and DDoS protection</li>
+            <li><strong>Legal authorities</strong> — if required by applicable law</li>
+        </ul>
+
+        <h2>9. Your rights</h2>
+        <p>Depending on your jurisdiction, you may have the right to:</p>
+        <ul>
+            <li>Access the personal data we hold about you</li>
+            <li>Correct inaccurate data (you can update your email in Settings)</li>
+            <li>Delete your account and all associated data (self-service in Settings)</li>
+            <li>Export your invoices as CSV or Excel (self-service)</li>
+            <li>Object to processing or lodge a complaint with a supervisory authority</li>
+        </ul>
+        <p>
+            To exercise any of these rights, use the tools in your account or
+            email <a href="mailto:privacy@voince.com">privacy@voince.com</a>.
+        </p>
+
+        <h2>10. Children</h2>
+        <p>
+            Voince is not intended for children under 16. We do not knowingly
+            collect data from children.
+        </p>
+
+        <h2>11. Changes to this policy</h2>
+        <p>
+            We may update this Privacy Policy from time to time. Material changes
+            will be communicated by email or through a notice on the Service.
+            Continued use after the effective date means you accept the updated
+            policy.
+        </p>
+
+        <h2>12. Contact</h2>
+        <p>
+            For privacy questions, data requests, or complaints, contact
+            <a href="mailto:privacy@voince.com">privacy@voince.com</a>.
+        </p>
+    </div>
+</div>
+
+<style>
+.legal-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 0 48px;
+}
+.legal-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+.legal-header h1 {
+    font-size: 1.9rem;
+    letter-spacing: -0.025em;
+    margin: 0 0 8px;
+}
+.legal-meta {
+    color: var(--text-tertiary);
+    font-size: 0.82rem;
+    margin: 0;
+}
+.legal-lead {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0 0 32px;
+    padding: 16px 20px;
+    background: var(--surface-muted);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--primary);
+}
+.legal-body h2 {
+    font-size: 1.15rem;
+    letter-spacing: -0.015em;
+    margin: 36px 0 12px;
+    color: var(--text);
+}
+.legal-body h3 {
+    font-size: 1rem;
+    margin: 24px 0 8px;
+    color: var(--text);
+}
+.legal-body p {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 14px;
+}
+.legal-body ul {
+    margin: 0 0 16px;
+    padding-left: 22px;
+}
+.legal-body li {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.legal-body code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+.legal-body a {
+    color: var(--primary);
+    text-decoration: none;
+}
+.legal-body a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+@media (max-width: 640px) {
+    .legal-page { padding: 8px 0 32px; }
+    .legal-header h1 { font-size: 1.5rem; }
+}
+</style>
+{% endblock %}

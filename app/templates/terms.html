@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="legal-page">
+    <div class="legal-header">
+        <h1>Terms of Service</h1>
+        <p class="legal-meta">Last updated: September 25, 2026</p>
+    </div>
+
+    <div class="legal-body">
+        <p class="legal-lead">
+            These Terms of Service ("Terms") govern your access to and use of
+            Voince (the "Service"), an AI-powered invoice data extraction
+            platform available at <strong>voince.com</strong>. By creating an
+            account or using the Service, you agree to be bound by these Terms.
+        </p>
+
+        <h2>1. The Service</h2>
+        <p>
+            Voince allows you to upload PDF invoices, extract structured data
+            from them using a locally-hosted language model, review and edit
+            the extracted data, and export it to CSV or Excel. All AI processing
+            happens on our own infrastructure; no invoice data is sent to
+            external AI providers.
+        </p>
+
+        <h2>2. Eligibility and account</h2>
+        <ul>
+            <li>You must be at least 16 years old to use Voince.</li>
+            <li>You are responsible for maintaining the confidentiality of your
+                account credentials and for all activity that occurs under your
+                account.</li>
+            <li>You must provide accurate account information and keep it up to date.</li>
+            <li>You may not share your account with others or create accounts
+                by automated means.</li>
+        </ul>
+
+        <h2>3. Acceptable use</h2>
+        <p>You agree <strong>not</strong> to:</p>
+        <ul>
+            <li>Upload documents you do not have the right to process</li>
+            <li>Upload documents containing special categories of personal data
+                (health, biometric, financial account numbers of third parties,
+                etc.) unless you have the legal right and legal basis to do so</li>
+            <li>Use the Service for any unlawful purpose or in violation of any
+                applicable laws, including data protection laws</li>
+            <li>Attempt to reverse-engineer, disrupt, or gain unauthorised
+                access to the Service or its infrastructure</li>
+            <li>Resell or sublicense the Service without written permission</li>
+            <li>Use the Service to build a competing product</li>
+            <li>Upload malware or any file that is not a PDF invoice</li>
+        </ul>
+        <p>
+            We reserve the right to suspend or terminate accounts that violate
+            these rules.
+        </p>
+
+        <h2>4. Plans, payments, and renewals</h2>
+
+        <h3>4.1 Free plan</h3>
+        <p>
+            The Free plan allows up to 10 invoices per calendar month, free of charge.
+        </p>
+
+        <h3>4.2 Pro plan</h3>
+        <p>
+            The Pro plan costs <strong>$10 USD per month</strong> and allows up
+            to 100 invoices per calendar month. Payment is accepted in
+            cryptocurrency via our processor, Trybit.
+        </p>
+
+        <h3>4.3 Billing model</h3>
+        <p>
+            Voince uses an <strong>internal balance model</strong>. You top up
+            your balance with cryptocurrency, and the monthly Pro fee is
+            automatically debited from that balance. If your balance is
+            insufficient at renewal time, your account is marked as past due
+            and downgraded to Free after the current period ends.
+        </p>
+
+        <h3>4.4 Refunds</h3>
+        <p>
+            Cryptocurrency payments are <strong>non-refundable</strong>. Because
+            blockchain transactions are irreversible, we cannot issue refunds
+            once a top-up is confirmed. If you believe there has been an
+            error, contact us at <a href="mailto:support@voince.com">support@voince.com</a>.
+        </p>
+
+        <h3>4.5 Cancellation</h3>
+        <p>
+            You may cancel your Pro subscription at any time from your Account
+            page. On cancellation, you retain Pro access until the end of the
+            current paid period. Unused balance remains available for future use.
+        </p>
+
+        <h2>5. AI output and your responsibility to verify</h2>
+        <p>
+            <strong>Voince uses AI to extract invoice data, but AI can make
+            mistakes.</strong> Extracted values (supplier, invoice number,
+            dates, amounts, line items) may be incomplete or inaccurate.
+        </p>
+        <ul>
+            <li>We run deterministic business validation (arithmetic checks,
+                required fields) to flag obvious errors.</li>
+            <li>You are <strong>responsible</strong> for reviewing and editing
+                extracted data before relying on it.</li>
+            <li>Voince is a data extraction tool, not an accounting, tax, or
+                legal advisor. Do not use it as your sole source of truth for
+                financial decisions.</li>
+        </ul>
+
+        <h2>6. Intellectual property</h2>
+        <p>
+            You retain all rights to the documents you upload and the data
+            extracted from them. We claim no ownership over your content.
+        </p>
+        <p>
+            Voince, its logo, code, and design are our intellectual property.
+            You may not copy, modify, or redistribute them without permission.
+        </p>
+
+        <h2>7. Service availability</h2>
+        <p>
+            We aim for high uptime but do not guarantee uninterrupted service.
+            The Service is provided <strong>"as is"</strong> and
+            <strong>"as available"</strong>. We may temporarily suspend the
+            Service for maintenance, updates, or security reasons.
+        </p>
+
+        <h2>8. Limitation of liability</h2>
+        <p>
+            To the maximum extent permitted by law, Voince and its operators
+            shall not be liable for any indirect, incidental, special,
+            consequential, or punitive damages arising from your use of the
+            Service, including but not limited to loss of profits, data, or
+            business opportunities.
+        </p>
+        <p>
+            Our total liability for any claim related to the Service shall not
+            exceed the amount you paid us in the 3 months preceding the claim.
+        </p>
+
+        <h2>9. Termination</h2>
+        <p>
+            You may delete your account at any time from Settings → Delete
+            account. We may suspend or terminate your account if you violate
+            these Terms, if required by law, or if the Service is discontinued.
+            On termination, we will delete your data as described in our
+            <a href="/privacy">Privacy Policy</a>.
+        </p>
+
+        <h2>10. Changes to the Service or Terms</h2>
+        <p>
+            We may modify the Service or these Terms at any time. Material
+            changes to the Terms will be communicated by email or through a
+            notice on the Service. Continued use after the effective date
+            means you accept the updated Terms.
+        </p>
+
+        <h2>11. Governing law</h2>
+        <p>
+            These Terms are governed by the laws of the jurisdiction in which
+            Voince operates. Any disputes shall be resolved in the courts of
+            that jurisdiction, unless mandatory consumer protection laws in
+            your country of residence provide otherwise.
+        </p>
+
+        <h2>12. Contact</h2>
+        <p>
+            For questions about these Terms, contact
+            <a href="mailto:support@voince.com">support@voince.com</a>.
+        </p>
+    </div>
+</div>
+
+<style>
+.legal-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 0 48px;
+}
+.legal-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+.legal-header h1 {
+    font-size: 1.9rem;
+    letter-spacing: -0.025em;
+    margin: 0 0 8px;
+}
+.legal-meta {
+    color: var(--text-tertiary);
+    font-size: 0.82rem;
+    margin: 0;
+}
+.legal-lead {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0 0 32px;
+    padding: 16px 20px;
+    background: var(--surface-muted);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--primary);
+}
+.legal-body h2 {
+    font-size: 1.15rem;
+    letter-spacing: -0.015em;
+    margin: 36px 0 12px;
+    color: var(--text);
+}
+.legal-body h3 {
+    font-size: 1rem;
+    margin: 24px 0 8px;
+    color: var(--text);
+}
+.legal-body p {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 14px;
+}
+.legal-body ul {
+    margin: 0 0 16px;
+    padding-left: 22px;
+}
+.legal-body li {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+.legal-body code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+.legal-body a {
+    color: var(--primary);
+    text-decoration: none;
+}
+.legal-body a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+@media (max-width: 640px) {
+    .legal-page { padding: 8px 0 32px; }
+    .legal-header h1 { font-size: 1.5rem; }
+}
+</style>
+{% endblock %}

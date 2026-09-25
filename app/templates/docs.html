@@ -1,0 +1,797 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="docs-page">
+
+    {# ---------- Sidebar ---------- #}
+    <aside class="docs-sidebar">
+        <nav class="docs-nav" aria-label="Documentation">
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Getting started</div>
+                <a href="#overview">Overview</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#upload">Uploading an invoice</a>
+                <a href="#review">Reviewing results</a>
+            </div>
+
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Validation</div>
+                <a href="#validation">Business rules</a>
+                <a href="#line-items">Line items</a>
+                <a href="#approve">Approve & Reject</a>
+            </div>
+
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Export & data</div>
+                <a href="#export">CSV / Excel export</a>
+                <a href="#delete">Deleting invoices</a>
+            </div>
+
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Plans & billing</div>
+                <a href="#plans">Free vs Pro</a>
+                <a href="#topup">Adding funds</a>
+                <a href="#subscription">Subscription</a>
+            </div>
+
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Account</div>
+                <a href="#oauth">Google / GitHub sign-in</a>
+                <a href="#settings">Email & password</a>
+                <a href="#privacy">Privacy & security</a>
+            </div>
+
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Troubleshooting</div>
+                <a href="#scanned">Scanned PDFs</a>
+                <a href="#limits">Monthly limit</a>
+                <a href="#extraction-errors">Extraction errors</a>
+            </div>
+
+            <div class="docs-nav-group">
+                <div class="docs-nav-title">Support</div>
+                <a href="#contact">Contact us</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+        </nav>
+    </aside>
+
+    {# ---------- Main content ---------- #}
+    <main class="docs-content">
+        <header class="docs-header">
+            <h1>Documentation</h1>
+            <p class="docs-subtitle">
+                Everything you need to get the most out of Voince.
+            </p>
+        </header>
+
+        {# ============ Getting started ============ #}
+
+        <section class="docs-section" id="overview">
+            <h2>Overview</h2>
+            <p>
+                Voince extracts structured data from PDF invoices using a
+                language model that runs <strong>locally on our own
+                server</strong>. Your invoice is never sent to OpenAI, Google,
+                Anthropic, or any other external AI provider.
+            </p>
+            <p>The pipeline is simple:</p>
+            <ol class="docs-list-ordered">
+                <li>You upload a PDF invoice.</li>
+                <li>We extract the text layer (no OCR — see <a href="#scanned">Scanned PDFs</a>).</li>
+                <li>The AI model extracts structured fields: supplier, invoice number, dates, amounts, line items.</li>
+                <li>Deterministic Python validation checks arithmetic, required fields, and business rules.</li>
+                <li>You review, edit if needed, and approve or reject.</li>
+                <li>Export to CSV or Excel with one click.</li>
+            </ol>
+            <div class="docs-callout docs-callout-info">
+                <strong>AI extracts. Python validates.</strong>
+                The model never makes financial decisions — it only reads the
+                document. All arithmetic checks and business rules are handled
+                by deterministic code.
+            </div>
+        </section>
+
+        <section class="docs-section" id="how-it-works">
+            <h2>How it works</h2>
+            <p>
+                Each upload goes through four stages, all in a few seconds:
+            </p>
+            <table class="docs-table">
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>What happens</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PDF extraction</strong></td>
+                        <td>We read the text layer of your PDF using <code>pypdf</code>. Typically under 100 ms.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI extraction</strong></td>
+                        <td>Llama 3.2 (1B) reads the text and returns structured JSON. Typically 1–5 seconds.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Validation</strong></td>
+                        <td>We check subtotal + tax = total, sum of line items, required fields. Under 10 ms.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Storage</strong></td>
+                        <td>The invoice, line items, and validation result are saved to your account.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="docs-section" id="upload">
+            <h2>Uploading an invoice</h2>
+            <ol class="docs-list-ordered">
+                <li>Open <a href="/upload">Upload</a> from the navigation bar.</li>
+                <li>Drag a PDF file onto the drop zone, or click to browse.</li>
+                <li>Click <strong>Process Invoice</strong>.</li>
+                <li>Wait a few seconds — you'll be redirected to the result page.</li>
+            </ol>
+            <h3>Limits</h3>
+            <ul class="docs-list">
+                <li>File type: <strong>PDF only</strong> (text-based, not scanned)</li>
+                <li>Maximum size: <strong>10 MB</strong></li>
+                <li>Monthly limit: 10 invoices (Free) or 100 invoices (Pro)</li>
+            </ul>
+        </section>
+
+        <section class="docs-section" id="review">
+            <h2>Reviewing results</h2>
+            <p>
+                After extraction you'll see two columns: the extracted fields
+                on the left, and validation results + actions on the right.
+            </p>
+            <ul class="docs-list">
+                <li><strong>Invoice</strong> — supplier, invoice number, dates</li>
+                <li><strong>Financial</strong> — currency, subtotal, tax, total</li>
+                <li><strong>Line items</strong> — description, quantity, unit price, total</li>
+                <li><strong>Validation</strong> — green if all checks pass, yellow for warnings, red for errors</li>
+            </ul>
+            <p>
+                Click <strong>Edit</strong> to correct any field or line item.
+                Saving re-runs validation automatically.
+            </p>
+        </section>
+
+        {# ============ Validation ============ #}
+
+        <section class="docs-section" id="validation">
+            <h2>Business rules</h2>
+            <p>After each extraction and edit, Voince runs these checks:</p>
+            <table class="docs-table">
+                <thead>
+                    <tr>
+                        <th>Check</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Supplier name present</td>
+                        <td><span class="docs-badge docs-badge-error">Error</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invoice number present</td>
+                        <td><span class="docs-badge docs-badge-error">Error</span></td>
+                    </tr>
+                    <tr>
+                        <td>Total present</td>
+                        <td><span class="docs-badge docs-badge-error">Error</span></td>
+                    </tr>
+                    <tr>
+                        <td>Subtotal + tax = total</td>
+                        <td><span class="docs-badge docs-badge-error">Error</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invoice date present</td>
+                        <td><span class="docs-badge docs-badge-warning">Warning</span></td>
+                    </tr>
+                    <tr>
+                        <td>Due date present</td>
+                        <td><span class="docs-badge docs-badge-warning">Warning</span></td>
+                    </tr>
+                    <tr>
+                        <td>Currency present</td>
+                        <td><span class="docs-badge docs-badge-warning">Warning</span></td>
+                    </tr>
+                    <tr>
+                        <td>Line items present</td>
+                        <td><span class="docs-badge docs-badge-warning">Warning</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sum of line items = subtotal</td>
+                        <td><span class="docs-badge docs-badge-warning">Warning</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                <strong>Errors</strong> must be fixed before you should rely on the data.
+                <strong>Warnings</strong> don't block approval but suggest you double-check.
+            </p>
+        </section>
+
+        <section class="docs-section" id="line-items">
+            <h2>Line items</h2>
+            <p>
+                Line items are extracted individually. If the AI misses a row
+                or misreads a quantity, open <strong>Edit</strong> and:
+            </p>
+            <ul class="docs-list">
+                <li>Click <strong>+ Add line item</strong> to add a missing row.</li>
+                <li>Click the <strong>×</strong> button to remove an incorrect row.</li>
+                <li>Correct <em>Description</em>, <em>Qty</em>, <em>Unit price</em>, or <em>Total</em> inline.</li>
+                <li>Click <strong>Save changes</strong> — validation re-runs automatically.</li>
+            </ul>
+            <div class="docs-callout docs-callout-tip">
+                <strong>Tip:</strong> if the sum of your line items doesn't match
+                the subtotal, validation will flag it. Use this as a hint to
+                find the missing row.
+            </div>
+        </section>
+
+        <section class="docs-section" id="approve">
+            <h2>Approve & Reject</h2>
+            <p>
+                On the result page you have two actions:
+            </p>
+            <ul class="docs-list">
+                <li><strong>Approve</strong> — marks the invoice as reviewed and final.</li>
+                <li><strong>Reject</strong> — marks it as rejected (e.g. duplicate or not relevant).</li>
+                <li><strong>Edit</strong> — change fields before approving.</li>
+            </ul>
+            <p>
+                Approval status is shown in the <a href="/invoices">Invoices</a>
+                list with a coloured badge.
+            </p>
+        </section>
+
+        {# ============ Export ============ #}
+
+        <section class="docs-section" id="export">
+            <h2>CSV / Excel export</h2>
+            <ul class="docs-list">
+                <li><strong>Single invoice:</strong> on the result page, click
+                    <strong>CSV</strong> or <strong>Excel</strong>.</li>
+                <li><strong>All invoices:</strong> on the Invoices page, click
+                    <strong>Download CSV</strong>, or use
+                    <code>/invoices/export.xlsx</code> for the full Excel.</li>
+            </ul>
+            <p>
+                Exports include all header fields and line items. Column layout
+                is stable — safe to import into accounting software.
+            </p>
+        </section>
+
+        <section class="docs-section" id="delete">
+            <h2>Deleting invoices</h2>
+            <p>
+                On the <a href="/invoices">Invoices</a> page, click the
+                <strong>trash icon</strong> next to any invoice. Confirmation
+                is required. Deletion permanently removes:
+            </p>
+            <ul class="docs-list">
+                <li>The database record (invoice, line items, validation)</li>
+                <li>The uploaded PDF file from our server</li>
+            </ul>
+            <p>This action cannot be undone.</p>
+        </section>
+
+        {# ============ Plans & billing ============ #}
+
+        <section class="docs-section" id="plans">
+            <h2>Free vs Pro</h2>
+            <table class="docs-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th>Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monthly invoices</td>
+                        <td>10</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td>AI extraction</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Validation & editing</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>CSV / Excel export</td>
+                        <td>✓</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Priority processing</td>
+                        <td>—</td>
+                        <td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td>$0 / month</td>
+                        <td>$10 / month</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                Upgrade on the <a href="/pricing">Pricing</a> page. Payment is
+                in crypto via Trybit.
+            </p>
+        </section>
+
+        <section class="docs-section" id="topup">
+            <h2>Adding funds</h2>
+            <p>Voince uses an internal balance:</p>
+            <ol class="docs-list-ordered">
+                <li>Open <a href="/billing/topup">Add funds</a>.</li>
+                <li>Enter an amount (min $10, max $500).</li>
+                <li>You're redirected to a Trybit checkout.</li>
+                <li>Pay in crypto from any wallet.</li>
+                <li>Your balance updates when Trybit confirms the payment —
+                    usually within a minute.</li>
+            </ol>
+            <div class="docs-callout docs-callout-info">
+                <strong>Note:</strong> the success page does not credit your
+                balance directly. We wait for Trybit's verified webhook.
+                Refresh the page after a minute.
+            </div>
+        </section>
+
+        <section class="docs-section" id="subscription">
+            <h2>Subscription & renewal</h2>
+            <p>
+                The Pro subscription is <strong>charged automatically</strong>
+                from your balance each month on the same date.
+            </p>
+            <ul class="docs-list">
+                <li>If your balance is enough — renewed automatically.</li>
+                <li>If not — you're marked <em>past due</em> and keep access
+                    until the current period ends.</li>
+                <li>If the period ends without payment — you're downgraded to Free.</li>
+                <li>You can <strong>cancel</strong> from <a href="/account">Account</a>
+                    — you keep access until the end of the paid period.</li>
+            </ul>
+        </section>
+
+        {# ============ Account ============ #}
+
+        <section class="docs-section" id="oauth">
+            <h2>Google / GitHub sign-in</h2>
+            <p>
+                You can sign in with email/password, Google, or GitHub. If you
+                registered with a password and later sign in with Google using
+                the same verified email, accounts are linked automatically.
+            </p>
+        </section>
+
+        <section class="docs-section" id="settings">
+            <h2>Email & password</h2>
+            <p>From <a href="/settings">Settings</a> you can:</p>
+            <ul class="docs-list">
+                <li>Change your email</li>
+                <li>Change or set a password</li>
+                <li>Delete your account permanently</li>
+            </ul>
+        </section>
+
+        <section class="docs-section" id="privacy">
+            <h2>Privacy & security</h2>
+            <ul class="docs-list">
+                <li>All data is isolated per user — no user can see another user's invoices.</li>
+                <li>All traffic uses HTTPS (TLS 1.2+).</li>
+                <li>Passwords are hashed with bcrypt — we cannot recover them.</li>
+                <li>AI runs locally, on our own server. No external AI provider.</li>
+                <li>Daily backups of the database are performed.</li>
+            </ul>
+            <p>
+                See the full <a href="/privacy">Privacy Policy</a> and
+                <a href="/terms">Terms of Service</a>.
+            </p>
+        </section>
+
+        {# ============ Troubleshooting ============ #}
+
+        <section class="docs-section" id="scanned">
+            <h2>Scanned PDFs</h2>
+            <p>
+                Voince works with PDFs that have a <strong>selectable text
+                layer</strong> — the kind produced by accounting software,
+                Word, LaTeX, or any modern PDF generator.
+            </p>
+            <p>
+                <strong>Scanned documents</strong> — pictures of paper invoices
+                saved as PDF — have no text layer. Voince cannot process them
+                (OCR is not supported yet). You will see a clear error message
+                and no invoice will be created.
+            </p>
+        </section>
+
+        <section class="docs-section" id="limits">
+            <h2>Monthly limit reached</h2>
+            <p>
+                The monthly counter resets on the 1st day of each calendar month
+                (UTC). If you reach your limit before that:
+            </p>
+            <ul class="docs-list">
+                <li>Wait for the reset, or</li>
+                <li><a href="/pricing">Upgrade to Pro</a> for 100 invoices per month.</li>
+            </ul>
+        </section>
+
+        <section class="docs-section" id="extraction-errors">
+            <h2>Extraction errors</h2>
+            <p>Common issues and what to do:</p>
+            <table class="docs-table">
+                <thead>
+                    <tr>
+                        <th>Symptom</th>
+                        <th>What to do</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"This PDF appears to be a scanned document"</td>
+                        <td>Use a PDF with a text layer. See <a href="#scanned">Scanned PDFs</a>.</td>
+                    </tr>
+                    <tr>
+                        <td>"AI could not understand the document"</td>
+                        <td>Try again, or edit fields manually. Rare for typical invoices.</td>
+                    </tr>
+                    <tr>
+                        <td>Missing line items</td>
+                        <td>Open Edit and add missing rows manually.</td>
+                    </tr>
+                    <tr>
+                        <td>Wrong amount or date</td>
+                        <td>Open Edit and correct. AI can misread unusual layouts.</td>
+                    </tr>
+                    <tr>
+                        <td>"Payment service is temporarily unavailable"</td>
+                        <td>Trybit API is unreachable. Try again in a few minutes.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        {# ============ Support ============ #}
+
+        <section class="docs-section" id="contact">
+            <h2>Contact us</h2>
+            <p>
+                Still stuck? We're happy to help.
+            </p>
+            <ul class="docs-list">
+                <li>Support: <a href="mailto:support@voince.com">support@voince.com</a></li>
+                <li>Privacy & data requests: <a href="mailto:privacy@voince.com">privacy@voince.com</a></li>
+                <li>GitHub: <a href="https://github.com/Belannandere/Virelo" target="_blank" rel="noopener">Belannandere/Virelo</a></li>
+            </ul>
+        </section>
+
+        <div class="docs-footer-note">
+            <p>
+                Voince — AI-powered invoice processing.
+                See also: <a href="/privacy">Privacy Policy</a> ·
+                <a href="/terms">Terms of Service</a>.
+            </p>
+        </div>
+    </main>
+</div>
+
+<style>
+/* ==========================================================
+   DOCS PAGE
+   ========================================================== */
+
+.docs-page {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 0 64px;
+    align-items: start;
+}
+
+/* ---------- Sidebar ---------- */
+.docs-sidebar {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.docs-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.docs-nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.docs-nav-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+    padding-left: 10px;
+}
+
+.docs-nav a {
+    display: block;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    line-height: 1.35;
+}
+
+.docs-nav a:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+/* ---------- Main content ---------- */
+.docs-content {
+    min-width: 0;
+    max-width: 720px;
+}
+
+.docs-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.docs-header h1 {
+    font-size: 1.9rem;
+    letter-spacing: -0.025em;
+    margin: 0 0 8px;
+}
+
+.docs-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.docs-section {
+    padding-top: 8px;
+    margin-bottom: 40px;
+    scroll-margin-top: 24px;
+}
+
+.docs-section h2 {
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+    color: var(--text);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.docs-section h3 {
+    font-size: 1rem;
+    margin: 24px 0 8px;
+    color: var(--text);
+}
+
+.docs-section p {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 14px;
+}
+
+.docs-section a {
+    color: var(--primary);
+    text-decoration: none;
+}
+.docs-section a:hover {
+    text-decoration: underline;
+}
+
+.docs-list,
+.docs-list-ordered {
+    margin: 0 0 16px;
+    padding-left: 22px;
+}
+
+.docs-list li,
+.docs-list-ordered li {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.docs-section code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
+}
+
+/* ---------- Tables ---------- */
+.docs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 20px;
+    font-size: 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.docs-table thead th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 10px 14px;
+    background: var(--surface-muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.docs-table tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.55;
+}
+
+.docs-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ---------- Callouts ---------- */
+.docs-callout {
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 20px;
+    border-left: 3px solid transparent;
+}
+
+.docs-callout strong {
+    display: inline;
+    font-weight: 600;
+}
+
+.docs-callout-info {
+    background: var(--info-soft);
+    border-left-color: var(--primary);
+    color: var(--text);
+}
+
+.docs-callout-tip {
+    background: var(--success-soft);
+    border-left-color: var(--success);
+    color: var(--text);
+}
+
+/* ---------- Inline badges ---------- */
+.docs-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.docs-badge-error {
+    background: var(--danger-soft);
+    color: var(--danger-text);
+    border: 1px solid var(--danger-border);
+}
+
+.docs-badge-warning {
+    background: var(--warning-soft);
+    color: var(--warning-text);
+    border: 1px solid var(--warning-border);
+}
+
+/* ---------- Footer note ---------- */
+.docs-footer-note {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+.docs-footer-note a {
+    color: var(--text-secondary);
+}
+.docs-footer-note a:hover {
+    color: var(--primary);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .docs-page {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 8px 0 48px;
+    }
+
+    .docs-sidebar {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        padding: 0;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 20px;
+    }
+
+    .docs-nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px 24px;
+    }
+
+    .docs-nav-group {
+        gap: 0;
+    }
+
+    .docs-nav a {
+        padding: 4px 0;
+    }
+
+    .docs-nav a:hover {
+        background: transparent;
+        color: var(--primary);
+    }
+
+    .docs-header h1 { font-size: 1.5rem; }
+}
+
+@media (max-width: 600px) {
+    .docs-nav {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .docs-table thead th,
+    .docs-table tbody td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+}
+</style>
+{% endblock %}
